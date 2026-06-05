@@ -1,0 +1,39 @@
+@model IEnumerable<KIEMTRAGIUAKY.Models.Enrollment>
+
+@{
+    ViewData["Title"] = "Học phần của tôi";
+}
+
+<h1 class="mb-4">Học phần đã đăng ký</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Bạn chưa đăng ký học phần nào.</div>
+}
+else
+{
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    @if (!string.IsNullOrEmpty(item.Course.Image))
+                    {
+                        <img src="@item.Course.Image" class="card-img-top" alt="@item.Course.Name" style="height: 200px; object-fit: cover;" />
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">@item.Course.Name</h5>
+                        <p class="card-text mb-1"><i class="bi bi-book"></i> Tín chỉ: <strong>@item.Course.Credits</strong></p>
+                        <p class="card-text mb-1"><i class="bi bi-person"></i> Giảng viên: @item.Course.Lecturer</p>
+                        <p class="card-text mb-1"><i class="bi bi-calendar"></i> Ngày đăng ký: @item.EnrollDate.ToString("dd/MM/yyyy HH:mm")</p>
+                    </div>
+                    <div class="card-footer bg-white border-top-0">
+                        <form asp-controller="Enrollment" asp-action="Cancel" asp-route-courseId="@item.CourseId" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đăng ký học phần này?');">
+                            <button type="submit" class="btn btn-outline-danger w-100">Hủy đăng ký</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

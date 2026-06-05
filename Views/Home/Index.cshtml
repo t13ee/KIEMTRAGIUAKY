@@ -1,0 +1,71 @@
+@model KIEMTRAGIUAKY.Models.PaginatedList<KIEMTRAGIUAKY.Models.Course>
+
+@{
+    ViewData["Title"] = "Danh sách học phần";
+}
+
+<h1 class="mb-4 text-center">Danh sách học phần</h1>
+
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm theo tên học phần..." value="@ViewData["CurrentFilter"]" />
+        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Xóa bộ lọc</a>
+    </div>
+</form>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                @if (!string.IsNullOrEmpty(item.Image))
+                {
+                    <img src="@item.Image" class="card-img-top" alt="@item.Name" style="height: 200px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <span>No Image</span>
+                    </div>
+                }
+                <div class="card-body">
+                    <h5 class="card-title text-primary">@item.Name</h5>
+                    <p class="card-text mb-1"><i class="bi bi-book"></i> Số tín chỉ: <strong>@item.Credits</strong></p>
+                    <p class="card-text mb-1"><i class="bi bi-person"></i> Giảng viên: @item.Lecturer</p>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    @if (User.IsInRole("STUDENT"))
+                    {
+                        <form asp-controller="Enrollment" asp-action="Enroll" asp-route-courseId="@item.Id" method="post">
+                            <button type="submit" class="btn btn-primary w-100 mb-2">Đăng ký học phần</button>
+                        </form>
+                    }
+                    <a href="#" class="btn btn-outline-primary w-100">Chi tiết</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center mt-4">
+        <li class="page-item @prevDisabled">
+            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)" asp-route-searchString="@ViewData["CurrentFilter"]">Trước</a>
+        </li>
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-searchString="@ViewData["CurrentFilter"]">@i</a>
+            </li>
+        }
+        <li class="page-item @nextDisabled">
+            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-searchString="@ViewData["CurrentFilter"]">Sau</a>
+        </li>
+    </ul>
+</nav>

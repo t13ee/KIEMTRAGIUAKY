@@ -1,0 +1,38 @@
+@model KIEMTRAGIUAKY.Models.Course
+
+@{
+    ViewData["Title"] = "Xóa học phần";
+}
+
+<h1 class="text-danger">Xóa học phần</h1>
+<h3>Bạn có chắc chắn muốn xóa học phần này không?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-3">Tên học phần</dt>
+        <dd class = "col-sm-9">@Html.DisplayFor(model => model.Name)</dd>
+        
+        <dt class = "col-sm-3">Hình ảnh</dt>
+        <dd class = "col-sm-9">
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                <img src="@Model.Image" alt="@Model.Name" style="max-width: 200px;" class="img-thumbnail" />
+            }
+        </dd>
+        
+        <dt class = "col-sm-3">Số tín chỉ</dt>
+        <dd class = "col-sm-9">@Html.DisplayFor(model => model.Credits)</dd>
+        
+        <dt class = "col-sm-3">Giảng viên</dt>
+        <dd class = "col-sm-9">@Html.DisplayFor(model => model.Lecturer)</dd>
+        
+        <dt class = "col-sm-3">Danh mục</dt>
+        <dd class = "col-sm-9">@Html.DisplayFor(model => model.Category.Name)</dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Xác nhận Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div>
